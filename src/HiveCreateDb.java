@@ -7,8 +7,8 @@ import java.sql.Statement;
 public class HiveCreateDb {
 
     /*
-    这个例子无法执行成功，hive 创建库的权限将被拒绝。
-    需要修改 conf/hdfs-site.xml 配置文件，将 dfs.permissions 属性修改为 false（默认为true）。
+    注意 hive 的执行权限问题，root 账户可以执行成功。
+    否则需要修改 conf/hdfs-site.xml 配置文件，将 dfs.permissions 属性修改为 false（默认为true）。
      */
     public static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
@@ -17,11 +17,13 @@ public class HiveCreateDb {
         Class.forName(driverName);
 
         // get connection
-        Connection con = DriverManager.getConnection("jdbc:hive2://192.168.209.101:10000/default", "", "");
+        Connection con = DriverManager.getConnection("jdbc:hive2://192.168.209.101:10000/default", "root", "root1234");
         Statement stmt = con.createStatement();
 
-        stmt.executeQuery("CREATE DATABASE userdb");
-        System.out.println("Database userdb created successfully!");
+        // CREATE DATABASE 创建数据库
+        // DROP DATABASE 删除数据库
+        stmt.execute("CREATE DATABASE IF NOT EXISTS userdb");
+        System.out.println("Database userdb created successfully.");
 
         con.close();
 
