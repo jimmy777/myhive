@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class HiveCreateTable {
+public class HiveLoadData {
     public static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
@@ -14,17 +14,11 @@ public class HiveCreateTable {
         Connection con = DriverManager.getConnection("jdbc:hive2://192.168.209.101:10000/userdb", "root", "root1234");
         Statement stmt = con.createStatement();
 
-        // CREATE TABLE 创建表
-        String sql = "CREATE TABLE IF NOT EXISTS"
-                + " employee (eid int, name String, "
-                + " salary String, destignation String)"
-                + " COMMENT 'Employee details'"
-                + " ROW FORMAT DELIMITED"
-                + " FIELDS TERMINATED BY '|'"
-                + " LINES TERMINATED BY '\\n'"
-                + " STORED AS TEXTFILE";
+        // LOAD DATA 加载数据
+        // LOCAL 从本地加载数据
+        String sql = "LOAD DATA LOCAL INPATH '/root/code/myhive/sample.txt' OVERWRITE INTO TABLE employee";
         stmt.execute(sql);
-        System.out.println("Table employee created successfully.");
+        System.out.println("Load data into employee successfully from local file.");
 
         con.close();
     }
